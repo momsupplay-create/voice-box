@@ -1,0 +1,10 @@
+.status-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.status-tabs__btn {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}

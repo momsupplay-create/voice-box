@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg {
+  display: block;
+}
+
+button, input, textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 타이포 유틸 — DESIGN.md Typography 표 그대로 */
+.type-headline-lg { font-size: 32px; font-weight: 700; line-height: 40px; }
+.type-headline-md { font-size: 22px; font-weight: 700; line-height: 30px; }
+.type-body { font-size: 16px; font-weight: 400; line-height: 26px; }
+.type-meta { font-size: 13px; font-weight: 500; line-height: 18px; }
+.type-button { font-size: 15px; font-weight: 600; line-height: 20px; }
+.type-title-sm { font-size: 14.5px; font-weight: 700; line-height: 20px; }
+.type-body-sm { font-size: 12.5px; font-weight: 400; line-height: 18px; }
+.type-meta-sm { font-size: 11px; font-weight: 400; line-height: 16px; }
+.type-badge-label { font-size: 10.5px; font-weight: 600; line-height: 14px; }
+.type-chip-label { font-size: 12.5px; font-weight: 400; line-height: 18px; }
+
+/* 공용 버튼 — DESIGN.md button-cta / button-secondary */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s ease-in-out;
+}
+.btn-cta:hover {
+  background: var(--color-on-accent-container);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--color-secondary);
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--radius);
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s ease-in-out;
+}
+.btn-secondary:hover {
+  background: var(--color-secondary-container);
+}
+
+/* 공용 필터/선택 칩 — DESIGN.md filter-chip / filter-chip-active */
+.chip {
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 12.5px;
+  white-space: nowrap;
+  transition: background 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+.chip.is-active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* 공용 배지 — DESIGN.md badge-status-* / badge-category */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--radius-full);
+  padding: 2px 9px;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge--status-접수 {
+  background: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+}
+.badge--status-처리중 {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+.badge--status-완료 {
+  background: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+}
+.badge--category {
+  background: var(--color-surface-variant);
+  color: var(--color-text);
+}
+
+/* 공용 입력 필드 — DESIGN.md input-field / textarea-field */
+.field {
+  display: block;
+  width: 100%;
+  background: var(--color-surface);
+  color: var(--color-text-strong);
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius);
+  padding: 8px;
+  font-size: 16px;
+  line-height: 26px;
+}
+.field:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+textarea.field {
+  min-height: 160px;
+  resize: vertical;
+}

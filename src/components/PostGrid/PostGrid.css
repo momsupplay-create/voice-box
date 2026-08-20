@@ -1,0 +1,29 @@
+.post-grid {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .post-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .post-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.post-grid__empty {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 20px 64px;
+  text-align: center;
+  color: var(--color-text);
+  font-size: 14px;
+}

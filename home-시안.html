@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 동네 목소리함 — 홈 화면 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --color-bg:#FBF9F4;
+    --color-text:#666263;
+    --color-text-strong:#3A3735;
+    --color-surface:#FFFFFF;
+    --color-surface-variant:#F3EEE3;
+    --color-outline:#E4DCC8;
+    --color-outline-strong:#C9BC9E;
+    --color-primary:#097A44;
+    --color-on-primary:#FFFFFF;
+    --color-primary-container:#DDEFE1;
+    --color-on-primary-container:#06502E;
+    --color-secondary:#4B3615;
+    --color-on-secondary:#FFFFFF;
+    --color-secondary-container:#F0E5D2;
+    --color-on-secondary-container:#3A2A10;
+    --color-accent:#E8720C;
+    --color-on-accent:#FFFFFF;
+    --color-accent-container:#FBE7D0;
+    --color-on-accent-container:#8A4508;
+    --shadow-sm:0 1px 2px rgba(75,54,21,.06), 0 1px 3px rgba(75,54,21,.08);
+    --shadow-md:0 4px 12px rgba(75,54,21,.12);
+    --shadow-lg:0 12px 32px rgba(75,54,21,.18);
+    --radius-sm:8px;
+    --radius:12px;
+    --radius-md:16px;
+    --radius-lg:20px;
+    --radius-full:9999px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--color-bg);
+    color:var(--color-text);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ===== 시안 전환 탭 (메타 UI, 실제 서비스 화면 아님) ===== */
+  .switcher{
+    position:sticky;top:0;z-index:100;
+    display:flex;gap:0;
+    background:var(--color-surface);
+    border-bottom:1px solid var(--color-outline);
+    box-shadow:var(--shadow-sm);
+  }
+  .switcher-tab{
+    flex:1;
+    border:none;background:transparent;
+    padding:14px 8px 12px;
+    text-align:center;
+    color:var(--color-text);
+    border-bottom:3px solid transparent;
+    font-size:14px;
+    transition:background .15s ease-in-out;
+  }
+  .switcher-tab b{display:block;font-size:15px;color:var(--color-text-strong);margin-bottom:2px;}
+  .switcher-tab:hover{background:var(--color-surface-variant);}
+  .switcher-tab.active{
+    border-bottom-color:var(--color-primary);
+    background:var(--color-primary-container);
+  }
+  .switcher-tab.active b{color:var(--color-on-primary-container);}
+
+  .variant{display:none;}
+  .variant.active{display:block;}
+
+  /* ===== 공통: 배지 ===== */
+  .badge{
+    display:inline-flex;align-items:center;gap:4px;
+    border-radius:var(--radius-full);
+    white-space:nowrap;
+  }
+  .badge-status.st-접수{background:var(--color-secondary-container);color:var(--color-on-secondary-container);}
+  .badge-status.st-처리중{background:transparent;color:var(--color-primary);border:1px solid var(--color-primary);}
+  .badge-status.st-완료{background:var(--color-primary-container);color:var(--color-on-primary-container);}
+  .badge-category{background:var(--color-surface-variant);color:var(--color-text);}
+
+  /* ===== 공통: 사진 자리표시자 ===== */
+  .photo-ph{
+    background:#E1E1DE;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .photo-ph svg{width:32%;height:32%;color:#A9A9A4;}
+
+  /* ===== 공통: 필터 버튼 기본형 ===== */
+  .filter-btn{
+    border:1px solid var(--color-outline);
+    background:var(--color-surface);
+    color:var(--color-text);
+    border-radius:var(--radius-full);
+    transition:background .15s ease-in-out, color .15s ease-in-out, border-color .15s ease-in-out;
+  }
+  .filter-btn.active{
+    background:var(--color-primary);
+    border-color:var(--color-primary);
+    color:var(--color-on-primary);
+  }
+
+  .cta{
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--color-primary);
+    color:var(--color-on-primary);
+    border:none;
+    border-radius:var(--radius);
+    font-weight:600;
+    box-shadow:var(--shadow-sm);
+  }
+  .cta:hover{background:var(--color-on-primary-container);}
+
+  footer.site-footer{
+    border-top:1px solid var(--color-outline);
+    color:var(--color-text);
+  }
+
+  /* =========================================================
+     안 1 — 여유형 (사진 크게 · 정보 여유 · 차분한 안내)
+     ========================================================= */
+  #v1 .v1-header{
+    display:flex;align-items:center;gap:12px;
+    padding:18px 24px;
+    background:var(--color-surface);
+    border-bottom:1px solid var(--color-outline);
+  }
+  #v1 .v1-header .org-name{font-size:17px;font-weight:700;color:var(--color-text-strong);}
+
+  #v1 .v1-hero{
+    padding:72px 24px 56px;
+    text-align:center;
+    max-width:720px;margin:0 auto;
+  }
+  #v1 .v1-hero h1{
+    font-size:38px;font-weight:800;line-height:1.35;
+    color:var(--color-text-strong);margin:0 0 18px;
+  }
+  #v1 .v1-hero p{
+    font-size:17px;line-height:1.7;color:var(--color-text);
+    margin:0 0 32px;
+  }
+  #v1 .v1-hero .cta{padding:16px 32px;font-size:16px;}
+
+  #v1 .v1-filters{
+    max-width:1080px;margin:0 auto;
+    padding:0 24px 24px;
+  }
+  #v1 .status-row{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;
+  }
+  #v1 .status-row .filter-btn{padding:10px 20px;font-size:14px;font-weight:600;}
+  #v1 .category-row{
+    display:flex;flex-wrap:wrap;gap:10px;
+  }
+  #v1 .category-row .filter-btn{padding:8px 16px;font-size:13px;}
+
+  #v1 .v1-list{
+    max-width:1080px;margin:0 auto;
+    padding:0 24px 96px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:32px;
+  }
+  @media (min-width:640px){ #v1 .v1-list{grid-template-columns:1fr 1fr;} }
+
+  #v1 .v1-card{
+    background:var(--color-surface);
+    border:1px solid var(--color-outline);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+    display:flex;flex-direction:column;
+  }
+  #v1 .v1-card .photo-ph{width:100%;aspect-ratio:16/9;}
+  #v1 .v1-card-body{padding:24px;}
+  #v1 .v1-card-badges{display:flex;gap:8px;margin-bottom:12px;}
+  #v1 .v1-card-badges .badge{padding:5px 12px;font-size:12px;font-weight:600;}
+  #v1 .v1-card h3{font-size:20px;font-weight:700;color:var(--color-text-strong);margin:0 0 10px;}
+  #v1 .v1-card p{font-size:15px;line-height:1.7;color:var(--color-text);margin:0 0 18px;}
+  #v1 .v1-card .meta{font-size:13px;color:var(--color-text);display:flex;gap:8px;}
+
+  #v1 .site-footer{padding:28px 24px;text-align:center;font-size:13px;}
+
+  /* =========================================================
+     안 2 — 밀도형 (사진 작게 · 정보 빽빽 · 강한 한 줄)
+     ========================================================= */
+  #v2 .v2-header{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 20px;
+    background:var(--color-surface);
+    border-bottom:1px solid var(--color-outline);
+  }
+  #v2 .v2-header .org-name{font-size:15px;font-weight:700;color:var(--color-text-strong);}
+
+  #v2 .v2-hero{
+    padding:36px 20px 28px;
+    background:var(--color-primary-container);
+  }
+  #v2 .v2-hero-inner{max-width:1080px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;}
+  #v2 .v2-hero h1{
+    font-size:28px;font-weight:800;line-height:1.3;
+    color:var(--color-on-primary-container);margin:0 0 6px;
+  }
+  #v2 .v2-hero p{
+    font-size:14px;line-height:1.5;color:var(--color-on-primary-container);margin:0;
+  }
+  #v2 .v2-hero .cta{padding:12px 22px;font-size:14px;flex-shrink:0;}
+  #v2 .cta{background:var(--color-accent);color:var(--color-on-accent);}
+  #v2 .cta:hover{background:var(--color-on-accent-container);}
+
+  #v2 .v2-filters{
+    max-width:1080px;margin:0 auto;
+    padding:16px 20px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  #v2 .status-row{display:flex;gap:6px;}
+  #v2 .status-row .filter-btn{padding:7px 14px;font-size:13px;font-weight:600;}
+  #v2 .category-scroll{
+    display:flex;gap:6px;overflow-x:auto;
+    padding-bottom:4px;
+    scrollbar-width:thin;
+  }
+  #v2 .category-scroll .filter-btn{padding:6px 14px;font-size:12.5px;flex-shrink:0;}
+  #v2 .filter-btn.active{
+    background:var(--color-accent);
+    border-color:var(--color-accent);
+    color:var(--color-on-accent);
+  }
+
+  #v2 .v2-list{
+    max-width:1080px;margin:0 auto;
+    padding:0 20px 64px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  @media (min-width:640px){ #v2 .v2-list{grid-template-columns:1fr 1fr;} }
+  @media (min-width:1024px){ #v2 .v2-list{grid-template-columns:1fr 1fr 1fr;} }
+
+  #v2 .v2-card{
+    background:var(--color-surface);
+    border:1px solid var(--color-outline);
+    border-radius:var(--radius-sm);
+    box-shadow:var(--shadow-sm);
+    display:flex;gap:12px;
+    padding:12px;
+  }
+  #v2 .v2-card .photo-ph{width:64px;height:64px;border-radius:var(--radius-sm);}
+  #v2 .v2-card-body{flex:1;min-width:0;}
+  #v2 .v2-card-badges{display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap;}
+  #v2 .v2-card-badges .badge{padding:2px 9px;font-size:10.5px;font-weight:600;}
+  #v2 .v2-card h3{
+    font-size:14.5px;font-weight:700;color:var(--color-text-strong);margin:0 0 4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #v2 .v2-card p{
+    font-size:12.5px;line-height:1.5;color:var(--color-text);margin:0 0 6px;
+    display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  #v2 .v2-card .meta{font-size:11px;color:var(--color-text);}
+
+  #v2 .site-footer{padding:18px 20px;text-align:center;font-size:12px;}
+
+  /* =========================================================
+     안 3 — 균형형 (사진 중간 · 정보 중간 · 대화체 질문)
+     ========================================================= */
+  #v3 .v3-header{
+    display:flex;align-items:center;gap:11px;
+    padding:15px 22px;
+    background:var(--color-surface);
+    border-bottom:1px solid var(--color-outline);
+  }
+  #v3 .v3-header .org-name{font-size:16px;font-weight:700;color:var(--color-text-strong);}
+
+  #v3 .v3-hero{
+    padding:56px 22px 40px;
+    text-align:center;
+  }
+  #v3 .v3-hero h1{
+    font-size:32px;font-weight:700;line-height:1.4;
+    color:var(--color-text-strong);margin:0 0 14px;
+  }
+  #v3 .v3-hero p{
+    font-size:15.5px;line-height:1.6;color:var(--color-text);
+    max-width:520px;margin:0 auto 26px;
+  }
+  #v3 .v3-hero .cta{padding:13px 26px;font-size:15px;}
+
+  #v3 .v3-filters{
+    max-width:1080px;margin:0 auto;
+    padding:0 22px 22px;
+    display:flex;flex-wrap:wrap;align-items:center;gap:14px;justify-content:space-between;
+  }
+  #v3 .status-row{display:flex;gap:8px;}
+  #v3 .status-row .filter-btn{padding:8px 16px;font-size:13.5px;font-weight:600;}
+  #v3 .category-select{
+    border:1px solid var(--color-outline);
+    background:var(--color-surface);
+    color:var(--color-text);
+    border-radius:var(--radius);
+    padding:9px 14px;
+    font-size:13.5px;
+    font-family:inherit;
+  }
+
+  #v3 .v3-list{
+    max-width:1080px;margin:0 auto;
+    padding:0 22px 80px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  @media (min-width:640px){ #v3 .v3-list{grid-template-columns:1fr 1fr;} }
+  @media (min-width:1024px){ #v3 .v3-list{grid-template-columns:1fr 1fr 1fr;} }
+
+  #v3 .v3-card{
+    background:var(--color-surface);
+    border:1px solid var(--color-outline);
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+    transition:box-shadow .15s ease-in-out;
+  }
+  #v3 .v3-card:hover{box-shadow:var(--shadow-md);}
+  #v3 .v3-card .photo-ph{width:100%;aspect-ratio:4/3;}
+  #v3 .v3-card-body{padding:18px;}
+  #v3 .v3-card-badges{display:flex;gap:6px;margin-bottom:10px;}
+  #v3 .v3-card-badges .badge{padding:4px 11px;font-size:11.5px;font-weight:600;}
+  #v3 .v3-card h3{font-size:17px;font-weight:700;color:var(--color-text-strong);margin:0 0 8px;}
+  #v3 .v3-card p{
+    font-size:13.5px;line-height:1.6;color:var(--color-text);margin:0 0 14px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  #v3 .v3-card .meta{font-size:12px;color:var(--color-text);display:flex;gap:8px;}
+
+  #v3 .site-footer{padding:22px 22px;text-align:center;font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<!-- 시안 전환 탭 -->
+<div class="switcher" role="tablist">
+  <button class="switcher-tab active" data-target="v1" role="tab" aria-selected="true"><b>안 1 · 여유형</b>사진 크게 · 차분한 안내</button>
+  <button class="switcher-tab" data-target="v2" role="tab" aria-selected="false"><b>안 2 · 밀도형</b>사진 작게 · 강한 한 줄</button>
+  <button class="switcher-tab" data-target="v3" role="tab" aria-selected="false"><b>안 3 · 균형형</b>사진 중간 · 대화체 질문</button>
+</div>
+
+<!-- 로고 아이콘 (공통) -->
+<template id="logo-icon">
+  <svg width="28" height="28" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <rect width="512" height="512" rx="115" fill="#097A44"/>
+    <g transform="translate(26,19.1) scale(2.3)">
+      <path d="M100,58 C72,28 22,48 32,98 C42,150 100,178 100,178 C100,178 158,150 168,98 C178,48 128,28 100,58 Z" fill="#FFFFFF"/>
+      <path d="M100,66 L100,164" stroke="#097A44" stroke-width="3" stroke-linecap="round"/>
+      <path d="M100,92 L78,108" stroke="#097A44" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M100,92 L122,108" stroke="#097A44" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M100,124 L82,140" stroke="#097A44" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M100,124 L118,140" stroke="#097A44" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </svg>
+</template>
+
+<!-- 사진 자리표시자 아이콘 (공통) -->
+<template id="photo-icon">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+    <circle cx="8.5" cy="10" r="1.6" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M21 15L15.5 10.5C15 10.1 14.3 10.1 13.9 10.5L6 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</template>
+
+<!-- =========================================================
+     안 1 — 여유형
+     ========================================================= -->
+<div id="v1" class="variant active">
+  <header class="v1-header">
+    <span class="logo-slot"></span>
+    <span class="org-name">맘숲놀이</span>
+  </header>
+
+  <section class="v1-hero">
+    <h1>우리 동네 목소리함</h1>
+    <p>골목 가로등부터 놀이터까지, 우리 동네에서 겪은 불편이나 제안을 편하게 남겨주세요.<br>접수부터 처리 완료까지, 진행 상황을 모아서 알려드립니다.</p>
+    <button class="cta">의견 남기기</button>
+  </section>
+
+  <div class="v1-filters">
+    <div class="status-row">
+      <button class="filter-btn active">전체</button>
+      <button class="filter-btn">접수</button>
+      <button class="filter-btn">처리중</button>
+      <button class="filter-btn">완료</button>
+    </div>
+    <div class="category-row">
+      <button class="filter-btn active">전체 분야</button>
+      <button class="filter-btn">시설/안전</button>
+      <button class="filter-btn">환경/미화</button>
+      <button class="filter-btn">교통</button>
+      <button class="filter-btn">소음</button>
+      <button class="filter-btn">기타</button>
+    </div>
+  </div>
+
+  <section class="v1-list" id="v1-list"></section>
+
+  <footer class="site-footer">© 2026 맘숲놀이 · 우리 동네 목소리함</footer>
+</div>
+
+<!-- =========================================================
+     안 2 — 밀도형
+     ========================================================= -->
+<div id="v2" class="variant">
+  <header class="v2-header">
+    <span class="logo-slot"></span>
+    <span class="org-name">맘숲놀이</span>
+  </header>
+
+  <section class="v2-hero">
+    <div class="v2-hero-inner">
+      <div>
+        <h1>말하면, 동네가 바뀝니다.</h1>
+        <p>불편이나 제안을 남기면 접수 → 처리중 → 완료로 진행 상황을 알려드려요.</p>
+      </div>
+      <button class="cta">의견 남기기</button>
+    </div>
+  </section>
+
+  <div class="v2-filters">
+    <div class="status-row">
+      <button class="filter-btn active">전체</button>
+      <button class="filter-btn">접수</button>
+      <button class="filter-btn">처리중</button>
+      <button class="filter-btn">완료</button>
+    </div>
+    <div class="category-scroll">
+      <button class="filter-btn active">전체 분야</button>
+      <button class="filter-btn">시설/안전</button>
+      <button class="filter-btn">환경/미화</button>
+      <button class="filter-btn">교통</button>
+      <button class="filter-btn">소음</button>
+      <button class="filter-btn">기타</button>
+    </div>
+  </div>
+
+  <section class="v2-list" id="v2-list"></section>
+
+  <footer class="site-footer">© 2026 맘숲놀이 · 우리 동네 목소리함</footer>
+</div>
+
+<!-- =========================================================
+     안 3 — 균형형
+     ========================================================= -->
+<div id="v3" class="variant">
+  <header class="v3-header">
+    <span class="logo-slot"></span>
+    <span class="org-name">맘숲놀이</span>
+  </header>
+
+  <section class="v3-hero">
+    <h1>요즘, 우리 동네 어떠신가요?</h1>
+    <p>작은 불편이든 좋은 제안이든 남겨주시면, 모아서 처리하고 결과를 다시 알려드릴게요.</p>
+    <button class="cta">의견 남기기</button>
+  </section>
+
+  <div class="v3-filters">
+    <div class="status-row">
+      <button class="filter-btn active">전체</button>
+      <button class="filter-btn">접수</button>
+      <button class="filter-btn">처리중</button>
+      <button class="filter-btn">완료</button>
+    </div>
+    <select class="category-select">
+      <option>전체 분야</option>
+      <option>시설/안전</option>
+      <option>환경/미화</option>
+      <option>교통</option>
+      <option>소음</option>
+      <option>기타</option>
+    </select>
+  </div>
+
+  <section class="v3-list" id="v3-list"></section>
+
+  <footer class="site-footer">© 2026 맘숲놀이 · 우리 동네 목소리함</footer>
+</div>
+
+<script>
+  const posts = [
+    { title:"골목 가로등이 안 켜져요", excerpt:"밤에 아이랑 다닐 때 너무 어두워요. 골목 초입 가로등이 며칠째 꺼져 있어요.", status:"접수", category:"시설/안전", author:"민지맘", date:"2026.08.19" },
+    { title:"놀이터 그네가 삐걱거려요", excerpt:"그네를 탈 때마다 삐걱거리는 소리가 나요. 안전한지 걱정돼요.", status:"처리중", category:"시설/안전", author:"다솜맘", date:"2026.08.17" },
+    { title:"횡단보도 신호가 너무 짧아요", excerpt:"아이 걸음으로는 초록불 안에 다 못 건너요. 시간을 조금 늘려주세요.", status:"접수", category:"교통", author:"구름아빠", date:"2026.08.16" },
+    { title:"재활용 분리수거함이 부족해요", excerpt:"분리수거함이 하나뿐이라 늘 넘쳐요. 하나만 더 놓아주시면 좋겠어요.", status:"처리중", category:"환경/미화", author:"요셉아빠", date:"2026.08.12" },
+    { title:"동네 벽화가 지워졌었어요", excerpt:"골목 담벼락 벽화가 지워졌었는데, 다시 그려주셔서 동네가 더 밝아졌어요.", status:"완료", category:"환경/미화", author:"은빛나무", date:"2026.08.05" },
+  ];
+
+  function photoIconHTML(){
+    return document.getElementById('photo-icon').innerHTML;
+  }
+
+  function renderCards(containerId, cardClass){
+    const el = document.getElementById(containerId);
+    el.innerHTML = posts.map(p => `
+      <article class="${cardClass}">
+        <div class="photo-ph">${photoIconHTML()}</div>
+        <div class="${cardClass}-body">
+          <div class="${cardClass}-badges">
+            <span class="badge badge-status st-${p.status}">${p.status}</span>
+            <span class="badge badge-category">${p.category}</span>
+          </div>
+          <h3>${p.title}</h3>
+          <p>${p.excerpt}</p>
+          <div class="meta"><span>${p.author}</span><span>·</span><span>${p.date}</span></div>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  renderCards('v1-list', 'v1-card');
+  renderCards('v2-list', 'v2-card');
+  renderCards('v3-list', 'v3-card');
+
+  document.querySelectorAll('.logo-slot').forEach(slot=>{
+    slot.innerHTML = document.getElementById('logo-icon').innerHTML;
+  });
+
+  document.querySelectorAll('.switcher-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.switcher-tab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false');});
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected','true');
+      document.querySelectorAll('.variant').forEach(v=>v.classList.remove('active'));
+      document.getElementById(tab.dataset.target).classList.add('active');
+      window.scrollTo({top:0,behavior:'instant'});
+    });
+  });
+
+  document.querySelectorAll('.status-row').forEach(row=>{
+    row.querySelectorAll('.filter-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        row.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+  document.querySelectorAll('.category-row, .category-scroll').forEach(row=>{
+    row.querySelectorAll('.filter-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        row.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

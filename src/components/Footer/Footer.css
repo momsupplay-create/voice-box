@@ -1,0 +1,19 @@
+.app-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--color-outline);
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.app-footer__org-name {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.app-footer__org-tagline {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text);
+}
