@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import PhotoDropzone from '../../components/PhotoDropzone/PhotoDropzone';
+import { createOpinion } from '../../lib/opinions';
 import './WritePage.css';
 
 export default function WritePage() {
@@ -11,10 +12,22 @@ export default function WritePage() {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 저장 기능은 아직 연결하지 않았다 — 화면만 먼저 확인하는 단계.
+    if (!title || !content) return;
+
+    setSubmitting(true);
+    setError(null);
+    try {
+      const post = await createOpinion({ title, content, category, photo });
+      navigate(`/posts/${post.id}`);
+    } catch (err) {
+      setError(err.message);
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -53,12 +66,14 @@ export default function WritePage() {
           <PhotoDropzone file={photo} onChange={setPhoto} />
         </div>
 
+        {error && <p className="write-form__error type-meta">저장하지 못했어요. ({error})</p>}
+
         <div className="write-form__actions">
           <button type="button" className="btn-secondary" onClick={() => navigate('/')}>
             취소
           </button>
-          <button type="submit" className="btn-cta">
-            등록하기
+          <button type="submit" className="btn-cta" disabled={submitting}>
+            {submitting ? '등록 중…' : '등록하기'}
           </button>
         </div>
       </form>
