@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient';
 
-const PHOTO_BUCKET = 'opinion-photos';
+const PHOTO_BUCKET = 'photos';
 const EXCERPT_LENGTH = 60;
 
 function formatDate(isoString) {
