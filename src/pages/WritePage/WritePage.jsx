@@ -4,6 +4,7 @@ import PageTitle from '../../components/PageTitle/PageTitle';
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import PhotoDropzone from '../../components/PhotoDropzone/PhotoDropzone';
 import { createOpinion, fetchOpinionById, updateOpinion } from '../../lib/opinions';
+import { generateAssist } from '../../lib/aiAssist';
 import { useAuth } from '../../lib/AuthContext';
 import './WritePage.css';
 
@@ -21,6 +22,8 @@ export default function WritePage() {
   const [loadingPost, setLoadingPost] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login', { replace: true });
@@ -37,6 +40,23 @@ export default function WritePage() {
       setLoadingPost(false);
     });
   }, [id, isEdit]);
+
+  const handleAiAssist = async () => {
+    if (!content.trim() || aiLoading) return;
+
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const result = await generateAssist(content);
+      setTitle(result.title);
+      setContent(result.content);
+      setCategory(result.category);
+    } catch (err) {
+      setAiError(err.message);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,15 +103,26 @@ export default function WritePage() {
           />
         </label>
 
-        <label className="write-form__field">
-          <span className="write-form__label type-meta">내용</span>
+        <div className="write-form__field">
+          <div className="write-form__field-header">
+            <span className="write-form__label type-meta">내용</span>
+            <button
+              type="button"
+              className="btn-secondary write-form__ai-btn"
+              onClick={handleAiAssist}
+              disabled={!content.trim() || aiLoading}
+            >
+              {aiLoading ? 'AI 작성 중…' : 'AI 작성도우미'}
+            </button>
+          </div>
           <textarea
             className="field"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="자세히 남겨주시면 처리하는 데 도움이 돼요."
+            placeholder="짧게 메모하듯 적어도 괜찮아요. AI 작성도우미가 정식 민원글로 다듬어드려요."
           />
-        </label>
+          {aiError && <p className="write-form__error type-meta">{aiError}</p>}
+        </div>
 
         <div className="write-form__field">
           <span className="write-form__label type-meta">분야</span>

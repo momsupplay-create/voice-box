@@ -22,6 +22,17 @@
   font-weight: 600;
 }
 
+.write-form__field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.write-form__ai-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 .write-form__current-photo {
   display: flex;
   align-items: center;
