@@ -1,0 +1,42 @@
+.auth-gate {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 360px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.auth-card__service {
+  color: var(--color-primary);
+  margin: 0 0 4px;
+}
+
+.auth-card__heading {
+  color: var(--color-text-strong);
+  margin: 0 0 8px;
+}
+
+.auth-card__message {
+  color: var(--color-text);
+  margin: 0 0 24px;
+}
+
+.auth-card__switch {
+  color: var(--color-text);
+  margin: 16px 0 0;
+}
+
+.auth-card__switch a {
+  color: var(--color-primary);
+  font-weight: 600;
+}

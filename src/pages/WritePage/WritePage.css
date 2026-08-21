@@ -22,6 +22,21 @@
   font-weight: 600;
 }
 
+.write-form__current-photo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text);
+}
+
+.write-form__current-photo img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--color-outline);
+}
+
 .write-form__actions {
   display: flex;
   justify-content: flex-end;

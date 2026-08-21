@@ -25,6 +25,7 @@ function mapOpinion(row) {
     author: row.author || '익명',
     date: formatDate(row.created_at),
     photo: row.photo_url,
+    userId: row.user_id,
   };
 }
 
@@ -60,15 +61,48 @@ async function uploadPhoto(file) {
   return data.publicUrl;
 }
 
-export async function createOpinion({ title, content, category, photo }) {
+export async function createOpinion({ title, content, category, photo, userId, author }) {
   const photoUrl = photo ? await uploadPhoto(photo) : null;
 
   const { data, error } = await supabase
     .from('opinions')
-    .insert({ title, content, category, photo_url: photoUrl })
+    .insert({ title, content, category, photo_url: photoUrl, user_id: userId, author })
     .select()
     .single();
 
   if (error) throw error;
   return mapOpinion(data);
+}
+
+export async function updateOpinion(id, { title, content, category, photo }) {
+  const updates = { title, content, category };
+  if (photo) {
+    updates.photo_url = await uploadPhoto(photo);
+  }
+
+  const { data, error } = await supabase
+    .from('opinions')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return mapOpinion(data);
+}
+
+export async function deleteOpinion(id) {
+  const { error } = await supabase.from('opinions').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function fetchMyOpinions(userId) {
+  const { data, error } = await supabase
+    .from('opinions')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data.map(mapOpinion);
 }

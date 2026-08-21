@@ -86,6 +86,26 @@ a {
   background: var(--color-secondary-container);
 }
 
+/* 공용 구글 버튼 — DESIGN.md button-google (흰 배경 + 테두리 고정) */
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--color-surface);
+  color: var(--color-text-strong);
+  border: 1px solid var(--color-outline-strong);
+  border-radius: var(--radius);
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s ease-in-out;
+}
+.btn-google:hover {
+  background: var(--color-surface-variant);
+}
+
 /* 공용 필터/선택 칩 — DESIGN.md filter-chip / filter-chip-active */
 .chip {
   border: 1px solid var(--color-outline);

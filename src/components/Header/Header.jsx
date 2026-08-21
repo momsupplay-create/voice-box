@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ORG_NAME } from '../../constants/site';
+import { useAuth } from '../../lib/AuthContext';
 import './Header.css';
 
 function LogoIcon() {
@@ -22,12 +23,37 @@ function LogoIcon() {
 }
 
 export default function Header() {
+  const { user, profile, loading } = useAuth();
+
   return (
     <header className="app-header">
       <Link to="/" className="app-header__brand">
         <LogoIcon />
         <span className="app-header__org-name">{ORG_NAME}</span>
       </Link>
+
+      {!loading && (
+        <div className="app-header__actions">
+          {user ? (
+            <Link to="/mypage" className="app-header__avatar-link" aria-label="마이페이지">
+              <img
+                src={profile?.avatar_url || '/icons/icon-192.png'}
+                alt=""
+                className="app-header__avatar"
+              />
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="btn-secondary app-header__auth-btn">
+                로그인
+              </Link>
+              <Link to="/signup" className="btn-cta app-header__auth-btn">
+                회원가입
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 }

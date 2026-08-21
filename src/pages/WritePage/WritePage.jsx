@@ -1,38 +1,75 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import CategoryPicker from '../../components/CategoryPicker/CategoryPicker';
 import PhotoDropzone from '../../components/PhotoDropzone/PhotoDropzone';
-import { createOpinion } from '../../lib/opinions';
+import { createOpinion, fetchOpinionById, updateOpinion } from '../../lib/opinions';
+import { useAuth } from '../../lib/AuthContext';
 import './WritePage.css';
 
 export default function WritePage() {
+  const { id } = useParams();
+  const isEdit = Boolean(id);
   const navigate = useNavigate();
+  const { user, profile, loading: authLoading } = useAuth();
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [existingPhotoUrl, setExistingPhotoUrl] = useState(null);
+  const [loadingPost, setLoadingPost] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    if (!authLoading && !user) navigate('/login', { replace: true });
+  }, [authLoading, user, navigate]);
+
+  useEffect(() => {
+    if (!isEdit) return;
+    fetchOpinionById(id).then((post) => {
+      if (!post) return;
+      setTitle(post.title);
+      setContent(post.content);
+      setCategory(post.category);
+      setExistingPhotoUrl(post.photo);
+      setLoadingPost(false);
+    });
+  }, [id, isEdit]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !content) return;
+    if (!title || !content || !user) return;
 
     setSubmitting(true);
     setError(null);
     try {
-      const post = await createOpinion({ title, content, category, photo });
-      navigate(`/posts/${post.id}`);
+      if (isEdit) {
+        const updated = await updateOpinion(id, { title, content, category, photo });
+        navigate(`/posts/${updated.id}`);
+      } else {
+        const post = await createOpinion({
+          title,
+          content,
+          category,
+          photo,
+          userId: user.id,
+          author: profile?.display_name,
+        });
+        navigate(`/posts/${post.id}`);
+      }
     } catch (err) {
       setError(err.message);
       setSubmitting(false);
     }
   };
 
+  if (authLoading || !user || loadingPost) return null;
+
   return (
     <div className="write-page">
-      <PageTitle>의견 쓰기</PageTitle>
+      <PageTitle>{isEdit ? '의견 수정' : '의견 쓰기'}</PageTitle>
 
       <form className="write-form" onSubmit={handleSubmit}>
         <label className="write-form__field">
@@ -63,6 +100,12 @@ export default function WritePage() {
 
         <div className="write-form__field">
           <span className="write-form__label type-meta">사진</span>
+          {existingPhotoUrl && !photo && (
+            <div className="write-form__current-photo">
+              <img src={existingPhotoUrl} alt="현재 등록된 사진" />
+              <span className="type-meta-sm">현재 사진 · 새로 선택하면 교체돼요</span>
+            </div>
+          )}
           <PhotoDropzone file={photo} onChange={setPhoto} />
         </div>
 
@@ -73,7 +116,7 @@ export default function WritePage() {
             취소
           </button>
           <button type="submit" className="btn-cta" disabled={submitting}>
-            {submitting ? '등록 중…' : '등록하기'}
+            {submitting ? '등록 중…' : isEdit ? '수정하기' : '등록하기'}
           </button>
         </div>
       </form>
