@@ -16,7 +16,7 @@ export async function generateAssist(draft, apiKey) {
     throw new AssistError('서버에 GEMINI_API_KEY가 설정되어 있지 않아요.', 500);
   }
 
-  const prompt = `당신은 동네 민원 게시판 "우리 동네 목소리함"의 글쓰기 도우미입니다.
+  const prompt = `당신은 동네 민원 게시판 "맘숲 목소리함"의 글쓰기 도우미입니다.
 주민이 짧게 쓴 메모를 정식 민원글로 다듬어주세요.
 
 규칙:
